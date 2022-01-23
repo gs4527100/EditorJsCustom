@@ -1,5 +1,76 @@
-﻿@{
-    ViewBag.Title = "Index";
-}
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+</head>
+<body>
+    <div class="border border-primary m-2" id="editorjs"></div>
 
-<h2>Index</h2>
+
+
+    <button id="save-button" class="btn btn-success">Save</button>
+    <pre id="output"></pre>
+
+
+
+
+    <script src="~/Js/editor.js"></script>
+    <script src="~/Js/tools/header.js"></script>
+    <script src="~/Js/tools/image.js"></script>
+    <script src="~/Js/tools/embed.js"></script>
+    <script src="~/Js/tools/delimiter.js"></script>
+    <script src="~/Js/tools/table.js"></script>
+    <script src="~/Js/tools/paragraph.js"></script>
+    <script src="~/Js/tools/nested-lis.js"></script>
+    <script>
+        const ImageTool = window.ImageTool;
+
+
+        const saveButton = document.getElementById('save-button');
+      //  const output = document.getElementById('output');
+
+        saveButton.addEventListener('click', function() {
+            editor.save().then( savedData => {
+                output.innerHTML = JSON.stringify(savedData, null, 4);
+            })
+        })
+
+
+
+        const editor = new EditorJS({
+            /**
+             * Tools list
+             */
+            tools: {
+                header: Header,
+                image: {
+                    class: ImageTool,
+                    config: {
+                        endpoints: {
+                            byFile: 'Home/ImageUpload', // Your backend file uploader endpoint
+                            byUrl: 'Home/ImageUpload', // Your endpoint that provides uploading by Url
+                        },
+                        "additionalRequestHeaders":[{"Content-Type":'multipart/form-data'}]
+                    }
+                },
+                list: {
+                    class: NestedList,
+                    inlineToolbar: true,
+                },
+                table: Table
+
+            }
+
+            /**
+             * Internationalzation config
+             */
+
+        });
+    </script>
+</body>
+
+</html>
